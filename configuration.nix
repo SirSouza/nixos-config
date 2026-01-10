@@ -62,12 +62,20 @@
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
 
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
-
   # Enable the GNOME Desktop Environment.
-  services.displayManager.gdm.enable = true;
+  # services.displayManager.gdm.enable = true;
   services.desktopManager.gnome.enable = true;
+
+  # Habilitar o SDDM como display manager
+  services.xserver = {
+    enable = true;
+    displayManager.sddm = {
+      enable = true;
+      wayland.enable = true;
+      # Opcional: configurar o tema
+      theme = "breeze";
+    };
+  };
 
   # Configure keymap in X11
   services.xserver.xkb = {
@@ -91,11 +99,14 @@
     pulse.enable = true;
   };
 
-# PostgreSQL configurado para DEV (trust, sem senha)
+  # PostgreSQL configurado para DEV (trust, sem senha)
   services.postgresql = {
     enable = true;
     package = pkgs.postgresql_15;
-    ensureDatabases = [ "mydatabase" "anorak" ];
+    ensureDatabases = [
+      "mydatabase"
+      "anorak"
+    ];
     ensureUsers = [
       {
         name = "anorak";
@@ -178,8 +189,10 @@
       };
 
       # Links simbólicos para temas GTK4
-      home.file.".themes/Gruvbox-Dark-macos".source = "${gruvbox-theme-custom}/share/themes/Gruvbox-Dark-macos";
-      home.file.".local/share/icons/Gruvbox-Plus-Dark".source = "${pkgs.gruvbox-plus-icons}/share/icons/Gruvbox-Plus-Dark";
+      home.file.".themes/Gruvbox-Dark-macos".source =
+        "${gruvbox-theme-custom}/share/themes/Gruvbox-Dark-macos";
+      home.file.".local/share/icons/Gruvbox-Plus-Dark".source =
+        "${pkgs.gruvbox-plus-icons}/share/icons/Gruvbox-Plus-Dark";
 
       xdg.configFile = {
         "gtk-3.0/settings.ini".text = ''
@@ -191,8 +204,10 @@
           gtk-application-prefer-dark-theme=1
         '';
         "gtk-4.0/assets".source = "${gruvbox-theme-custom}/share/themes/Gruvbox-Dark-macos/gtk-4.0/assets";
-        "gtk-4.0/gtk.css".source = "${gruvbox-theme-custom}/share/themes/Gruvbox-Dark-macos/gtk-4.0/gtk.css";
-        "gtk-4.0/gtk-dark.css".source = "${gruvbox-theme-custom}/share/themes/Gruvbox-Dark-macos/gtk-4.0/gtk-dark.css";
+        "gtk-4.0/gtk.css".source =
+          "${gruvbox-theme-custom}/share/themes/Gruvbox-Dark-macos/gtk-4.0/gtk.css";
+        "gtk-4.0/gtk-dark.css".source =
+          "${gruvbox-theme-custom}/share/themes/Gruvbox-Dark-macos/gtk-4.0/gtk-dark.css";
       };
 
       # Variáveis de ambiente para GTK
