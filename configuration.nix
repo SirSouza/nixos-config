@@ -2,23 +2,31 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running 'nixos-help').
 
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
-    <home-manager/nixos>
     ./disks.nix # Arquivo local (ver disks.nix.example)
   ];
 
   # Bootloader
-  boot.loader.systemd-boot.enable = true;
+  boot.loader.systemd-boot.enable = lib.mkForce false;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.systemd-boot.configurationLimit = 5;
   boot.loader.timeout = 120;
   boot.supportedFilesystems = [ "ntfs" ];
+  
+  # Lanzaboote para secure boot
+  boot.lanzaboote = {
+    enable = true;
+    pkiBundle = "/etc/secureboot";
+  };
+ 
 
+  # Limite de gerações 
+  boot.loader.systemd-boot.configurationLimit = 5;
+  
   # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
