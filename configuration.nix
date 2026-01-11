@@ -45,15 +45,19 @@
     LC_TIME = "pt_BR.UTF-8";
   };
 
-  # Habilita suporte a OpenGL/Gráficos
+# Habilita suporte a OpenGL/Gráficos
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
   };
 
-  # Carrega o driver nvidia
-  services.xserver.videoDrivers = [ "nvidia" ];
+  # Enable X11 e configurações de vídeo
+  services.xserver = {
+    enable = true;
+    videoDrivers = [ "nvidia" ];
+  };
 
+  # Configuração NVIDIA
   hardware.nvidia = {
     modesetting.enable = true;
     powerManagement.enable = false;
@@ -62,28 +66,25 @@
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
 
-  # Enable the GNOME Desktop Environment.
-  # services.displayManager.gdm.enable = true;
-  services.desktopManager.gnome.enable = true;
-
-  # Habilitar o SDDM como display manager
-  services.xserver = {
+  # SDDM como display manager
+  services.displayManager.sddm = {
     enable = true;
-    displayManager.sddm = {
-      enable = true;
-      wayland.enable = true;
-      # Opcional: configurar o tema
-      theme = "breeze";
-    };
+    wayland.enable = true;
+    theme = "breeze";
   };
 
+  # Enable the GNOME Desktop Environment
+  services.desktopManager.gnome.enable = true;
+
+  # Impressão
+  services.printing.enable = true;
+  
   # Configure keymap in X11
   services.xserver.xkb = {
     layout = "us";
     variant = "";
   };
 
-  services.printing.enable = true;
   programs.fish.enable = true;
 
   programs.direnv.enable = true;
@@ -269,6 +270,8 @@
     fishPlugins.forgit
     fishPlugins.hydro
     fishPlugins.grc
+    nmap
+    gparted
   ];
   environment.pathsToLink = [ "/share/applications" ];
   system.stateVersion = "25.11";
