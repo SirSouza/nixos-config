@@ -19,7 +19,7 @@
   boot.loader.timeout = 120;
   boot.supportedFilesystems = [ "ntfs" ];
   
-  # Lanzaboote para secure boot
+  # Lanzaboote for Secure Boot
   boot.lanzaboote = {
     enable = true;
     pkiBundle = "/var/lib/sbctl";
@@ -27,7 +27,7 @@
  
   
  
- # Limite de gerações 
+ # Generation limit
   boot.loader.systemd-boot.configurationLimit = 3;
   
   # Use latest kernel.
@@ -56,19 +56,19 @@
     LC_TIME = "pt_BR.UTF-8";
   };
 
-# Habilita suporte a OpenGL/Gráficos
+# Enables OpenGL/Graphics support.
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
   };
 
-  # Enable X11 e configurações de vídeo
+  # Enable X11 and video settings.
   services.xserver = {
     enable = true;
     videoDrivers = [ "nvidia" ];
   };
 
-  # Configuração NVIDIA
+  # NVIDIA Configuration
   hardware.nvidia = {
     modesetting.enable = true;
     powerManagement.enable = false;
@@ -77,7 +77,7 @@
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
 
-  # SDDM como display manager
+  # SDDM as a display manager
   services.displayManager.sddm = {
     enable = true;
     wayland.enable = true;
@@ -87,15 +87,9 @@
   # Enable the GNOME Desktop Environment
   services.desktopManager.gnome.enable = true;
 
-  # Impressão
+  # Printing 
   services.printing.enable = true;
   
-  # Configure keymap in X11
-  services.xserver.xkb = {
-    layout = "us";
-    variant = "";
-  };
-
   programs.fish.enable = true;
 
   programs.direnv = {
@@ -114,7 +108,8 @@
     pulse.enable = true;
   };
 
-  # PostgreSQL configurado para DEV (trust, sem senha)
+  # PostgreSQL configured for DEV (trust, no password)
+  # DO NOT USE IN PRODUCTION
   services.postgresql = {
     enable = true;
     package = pkgs.postgresql_15;
@@ -136,7 +131,7 @@
     '';
   };
 
-  # --- CONFIGURAÇÃO DE USUÁRIO DO SISTEMA ---
+  # --- System user configuration ---
   users.users.anorak = {
     isNormalUser = true;
     description = "Anorak";
@@ -166,11 +161,11 @@
       home.stateVersion = "25.11";
       home.enableNixpkgsReleaseCheck = false;
 
-      # Ativa o dconf (necessário para as configs abaixo)
+      # Enable dconf (required for the configurations below)
       dconf.enable = true;
 
       dconf.settings = {
-        # Configurações de Interface e Fontes
+        # Interface and Font Settings
         "org/gnome/desktop/interface" = {
           color-scheme = "prefer-dark";
           font-name = "JetBrainsMono Nerd Font 11";
@@ -180,7 +175,7 @@
           gtk-theme = "Gruvbox-Dark-macos";
         };
 
-        # Limpeza automática e Privacidade
+        # Automatic cleaning and Privacy
         "org/gnome/desktop/privacy" = {
           remember-recent-files = true;
           recent-files-max-age = 30;
@@ -190,7 +185,7 @@
         };
       };
 
-      # Configuração GTK
+      #  GTK Settings
       gtk = {
         enable = true;
         theme = {
@@ -203,7 +198,7 @@
         };
       };
 
-      # Links simbólicos para temas GTK4
+      # symbolyc links for GTK4
       home.file.".themes/Gruvbox-Dark-macos".source =
         "${gruvbox-theme-custom}/share/themes/Gruvbox-Dark-macos";
       home.file.".local/share/icons/Gruvbox-Plus-Dark".source =
@@ -225,7 +220,7 @@
           "${gruvbox-theme-custom}/share/themes/Gruvbox-Dark-macos/gtk-4.0/gtk-dark.css";
       };
 
-      # Variáveis de ambiente para GTK
+      # Enviroment viariables for GTK
       home.sessionVariables = {
         GTK_THEME = "Gruvbox-Dark-macos";
       };
@@ -250,7 +245,7 @@
 
   
 
-  # Configuração OBS-Studio e plugins
+  # OBS-Studio and plugins Settings
   programs.obs-studio = {
     enable = true;
 
@@ -270,6 +265,9 @@
     ];
   };
 
+
+
+   # Packages
   environment.systemPackages = with pkgs; [
     sbctl
     ntfs3g
