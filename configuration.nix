@@ -10,7 +10,9 @@
     ./hardware-configuration.nix
     ./disks.nix # Arquivo local (ver disks.nix.example)
   ];
-
+  
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  
   # Bootloader
   boot.loader.systemd-boot.enable = lib.mkForce false;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -20,11 +22,12 @@
   # Lanzaboote para secure boot
   boot.lanzaboote = {
     enable = true;
-    pkiBundle = "/etc/secureboot";
+    pkiBundle = "/var/lib/sbctl";
   };
  
-
-  # Limite de gerações 
+  
+ 
+ # Limite de gerações 
   boot.loader.systemd-boot.configurationLimit = 5;
   
   # Use latest kernel.
@@ -242,7 +245,30 @@
     '';
   };
 
+
+  # Configuração OBS-Studio e plugins
+
+  programs.obs-studio = {
+    enable = true;
+
+    # optional Nvidia hardware acceleration
+    package = (
+      pkgs.obs-studio.override {
+        cudaSupport = true;
+      }
+    );
+
+    plugins = with pkgs.obs-studio-plugins; [
+      wlrobs
+      obs-backgroundremoval
+      obs-pipewire-audio-capture
+      obs-gstreamer
+      obs-vkcapture
+    ];
+  };
+
   environment.systemPackages = with pkgs; [
+    sbctl
     ntfs3g
     gnome-extension-manager
     gnome-software
