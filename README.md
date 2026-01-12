@@ -218,7 +218,8 @@ Found something interesting or have suggestions? Feel free to open an issue or P
 
 ## 📜 License
 
-MIT — Do whatever you want with it! 🎉
+[![CC0](https://licensebuttons.net/p/zero/1.0/88x31.png)](https://creativecommons.org/publicdomain/zero/1.0/)
+This configuration is released under CC0 (Public Domain). Use it freely!
 
 ---
 
