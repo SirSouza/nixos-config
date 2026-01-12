@@ -28,7 +28,7 @@
   
  
  # Limite de gerações 
-  boot.loader.systemd-boot.configurationLimit = 5;
+  boot.loader.systemd-boot.configurationLimit = 3;
   
   # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
@@ -98,8 +98,11 @@
 
   programs.fish.enable = true;
 
-  programs.direnv.enable = true;
-  programs.direnv.nix-direnv.enable = true;
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+ };
+
 
   # Enable sound with pipewire.
   services.pulseaudio.enable = false;
@@ -245,9 +248,9 @@
     '';
   };
 
+  
 
   # Configuração OBS-Studio e plugins
-
   programs.obs-studio = {
     enable = true;
 
@@ -296,7 +299,6 @@
     spotify
     vlc
     obsidian
-    direnv
     nodejs
     fish
     fishPlugins.done
