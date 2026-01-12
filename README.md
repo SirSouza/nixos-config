@@ -1,162 +1,229 @@
-# 🚀 Minha Config do NixOS
+# 🚀 My NixOS Config
 
-> *"A humanidade questionou. O computador calculou. Milhões de anos se passaram. A resposta ecoou pelo cosmos: '42'. Enquanto isso, no porão, um dev descobriu que nixos-rebuild switch resolve quase tudo. Quase."*
+> *"Humanity questioned. The computer calculated. Millions of years passed. The answer echoed through the cosmos: '42'. Meanwhile, in the basement, a dev discovered that `nixos-rebuild switch` solves almost everything. Almost."*
 
-Bem-vindo à minha configuração do NixOS! Este é meu setup pessoal rodando GNOME com tema Gruvbox, porque dark mode é vida. 🌙
+Welcome to my NixOS configuration! This is my personal setup running GNOME with a Gruvbox theme.
 
-## 📊 O Setup
+---
 
-**Hardware:**
-- **CPU:** AMD Ryzen 5 5600X (12 threads de pura beleza)
-- **GPU:** NVIDIA GeForce GTX 1060 3GB *(sim, ela ainda tá viva e lutando bravamente em 2026)*
-- **RAM:** 32GB (porque fechar abas do Chrome não é uma opção)
-- **Storage:** 3TB total (1TB SSD + 2x 1TB HDD)
-- **Mobo:** ASRock B450M Steel Legend
+## 📊 The Setup
 
-**Software:**
-- **OS:** NixOS 25.11 (Xantusia)
-- **Kernel:** Linux 6.18.3 (sempre no latest)
-- **DE:** GNOME 49 com Wayland
-- **DM:** SDDM com suporte a Wayland
-- **Shell:** Fish (porque vida é curta demais pra bash)
+### Hardware
+- **CPU:** AMD Ryzen 5 5600X 
+- **GPU:** NVIDIA GeForce GTX 1060 3GB *(yes, it’s still alive and fighting bravely in 2026)*
+- **RAM:** 32GB (because closing Chrome tabs is not an option)
+- **Storage:** 3TB total (1TB SSD + 2× 1TB HDD)
+- **Motherboard:** ASRock B450M Steel Legend
 
-## ✨ Features Principais
+### Software
+- **OS:** NixOS 26.05 (Yarara)
+- **Kernel:** Linux 6.18.4 (always latest)
+- **DE:** GNOME 49 (Wayland)
+- **DM:** SDDM with Wayland support
+- **Shell:** Fish (life is too short for bash)
+
+---
+
+## ✨ Key Features
 
 ### 🎨 Visual
-- **Tema Gruvbox** em absolutamente tudo (GTK3, GTK4, GNOME)
-- Fontes **JetBrains Mono Nerd Font** porque programador tem que ter estilo
-- Extensões do GNOME: Blur My Shell, Dash to Dock, User Themes
-- SDDM com tema Breeze (pode mudar depois se quiser)
+- **Gruvbox theme** everywhere (GTK3, GTK4, GNOME)
+- **JetBrains Mono Nerd Font** — because developers need style
+- GNOME extensions: Dash to Dock, User Themes
+- SDDM with Breeze theme (can be changed later)
 
-### 🛠️ Desenvolvimento
-- **PostgreSQL 15** configurado em modo DEV (trust, sem senha - **NÃO USE EM PRODUÇÃO**)
-- Bancos pré-criados: `mydatabase` e `anorak`
-- **direnv + nix-direnv** para ambientes de desenvolvimento isolados
-- **Node.js** porque JavaScript domina o mundo, querendo ou não
-- **VSCode** como IDE principal
+### 🛠️ Development
+- **PostgreSQL 15** configured in DEV mode (trust auth, no password — **DO NOT USE IN PRODUCTION**)
+- Pre-created databases: `mydatabase` and `anorak`
+- **direnv + nix-direnv** for isolated development environments
+- **Node.js** (whether we like it or not, JavaScript runs the world)
+- **VS Code** as the main IDE 
 
-### 🎮 Apps & Produtividade
-- **Ghostty** (terminal moderno e rápido)
-- **Firefox** (pré-instalado)
-- **Flatpak** habilitado com Flathub (para aqueles apps que o Nix não tem)
-- **Discord/Vesktop** e **Element** para comunicação
-- **Spotify** para código com trilha sonora
-- **Obsidian** para organizar a bagunça mental
-- **VLC** porque ele toca qualquer coisa
+### 🎮 Apps & Productivity
+- **Ghostty** (modern and fast terminal)
+- **Firefox** (pre-installed)
+- **Flatpak** enabled with Flathub 
+- **Discord** for communication
+- **Spotify** for coding soundtracks
+- **Obsidian** to organize mental chaos
+- **VLC** — it plays everything
 
 ### 🐟 Fish Shell Setup
-Plugins configurados:
-- `done` - notificações quando comandos longos terminam
-- `fzf-fish` - busca fuzzy em tudo
-- `forgit` - git interativo e bonito
-- `hydro` - prompt minimalista e rápido
-- `grc` - colorização de comandos
+Configured plugins:
+- `done` — notifications when long-running commands finish
+- `fzf-fish` — fuzzy search everywhere
+- `forgit` — interactive and clean Git workflow
+- `hydro` — minimal and fast prompt
+- `grc` — command output colorization
 
 ### 🎯 NVIDIA Drivers
-- Drivers proprietários (stable)
-- Modesetting habilitado
-- Suporte a 32-bit (para aqueles jogos antigos)
+- Proprietary drivers (stable)
+- Modesetting enabled
+- 32-bit support (for legacy games)
 
-## 📁 Estrutura do Repo
+---
+
+## 🔐 Secure Boot with Lanzaboote (Flakes)
+
+This configuration uses **lanzaboote** to enable **UEFI Secure Boot** while keeping the system fully declarative and compatible with **Nix flakes**.
+
+### Why Lanzaboote?
+- Works seamlessly with **systemd-boot**
+- Fully declarative Secure Boot setup
+- Ideal for **flake-based** NixOS systems
+- Automatically signs kernels and boot artifacts
+
+### Key Characteristics
+- Secure Boot **enabled and enforced**
+- Custom Machine Owner Key (MOK) managed by NixOS
+- Compatible with system rollbacks and generations
+- No shim required
+
+### High-Level Setup Overview
+- Secure Boot keys are generated and managed declaratively
+- systemd-boot is used as the bootloader
+- lanzaboote signs EFI binaries automatically during rebuilds
+- Flakes are used as the entry point for system configuration
+
+### Notes
+- After initial key enrollment, Secure Boot remains enabled across rebuilds
+- If firmware settings are reset, keys may need to be re-enrolled
+- This setup is ideal for laptops and desktops that require Secure Boot (e.g. dual-boot with Windows)
+
+> ⚠️ Important: Once Secure Boot is enabled and enforced, unsigned kernels **will not boot**.
+
+---
+
+## 📁 Repository Structure
 
 ```
 .
-├── configuration.nix           # Config principal
-├── hardware-configuration.nix  # Config de hardware (gerado automaticamente)
-├── disks.nix                   # Configuração de discos (criar baseado no .example)
-└── README.md                   # Você está aqui! 👋
+├── configuration.nix           # Main system configuration
+├── hardware-configuration.nix  # Auto-generated hardware config
+├── disks.nix                   # Disk layout (create based on the example)
+└── README.md                   # You are here 👋
 ```
 
-## 🚀 Como Usar
+---
 
-### Instalação Limpa
+## 🚀 How to Use
 
-1. Clone este repo:
+### Fresh Installation
+
+1. Clone this repository:
 ```bash
-git clone https://github.com/seu-usuario/nixos-config.git /etc/nixos
+git clone https://github.com/SirSouza/nixos-config.git /etc/nixos
 cd /etc/nixos
 ```
 
-2. **IMPORTANTE:** Crie seu `disks.nix` baseado no seu sistema (ou use o exemplo)
+2. **IMPORTANT:** Create your `disks.nix` according to your system (or copy from the example)
 
-3. Gere seu `hardware-configuration.nix`:
+3. Generate your hardware config:
 ```bash
 sudo nixos-generate-config --show-hardware-config > hardware-configuration.nix
 ```
 
-4. Edite o `configuration.nix` e ajuste:
-   - Nome do usuário (troque `anorak` pelo seu)
-   - Hostname (linha 28)
-   - Bancos de dados PostgreSQL (se necessário)
+4. Edit `configuration.nix` and adjust:
+- Username (replace `anorak` with yours)
+- Hostname
+- PostgreSQL databases (if needed)
 
-5. Rebuild:
+5. Rebuild the system:
 ```bash
 sudo nixos-rebuild switch
 ```
-
-### Atualizando o Sistema
-
+6. With flakes:
+- I strongly recommend using aliases for this.
 ```bash
-# Atualizar canais
-sudo nix-channel --update
-
-# Rebuild
-sudo nixos-rebuild switch
-
-# Ou tudo de uma vez
-sudo nix-channel --update && sudo nixos-rebuild switch
+cd /etc/nixos
+sudo nixos-rebuild switch --flake .#you
+```
+- From anywhere in your NixOS
+```bash
+sudo nixos-rebuild switch --flake /etc/nixos
 ```
 
-### Limpando Gerações Antigas
-
-```bash
-# Listar gerações
-sudo nix-env --list-generations --profile /nix/var/nix/profiles/system
-
-# Deletar gerações antigas (mantém as últimas 5 automaticamente no boot)
-sudo nix-collect-garbage -d
-
-# Ou deletar gerações específicas
-sudo nix-env --delete-generations 1 2 3 --profile /nix/var/nix/profiles/system
-```
-
-## 🔧 Customizações Interessantes
-
-### Home Manager
-A config usa Home Manager integrado ao NixOS para gerenciar configs de usuário. Tudo do tema Gruvbox, fontes e configurações do GNOME está no bloco `home-manager.users.anorak`.
-
-### PostgreSQL em Modo DEV
-O PostgreSQL está configurado em modo **trust** (sem senha). Isso é ótimo para desenvolvimento local, mas **NUNCA** use isso em produção ou em uma máquina exposta à internet.
-
-### Flatpak Auto-Setup
-O systemd service `flatpak-repo` adiciona automaticamente o Flathub na primeira inicialização.
-
-### Limite de Boot
-O bootloader mantém apenas as últimas 5 gerações (configurável em `boot.loader.systemd-boot.configurationLimit`).
-
-## 💡 Dicas
-
-- **NTFS Support:** Habilitado caso você tenha dual-boot com Windows
-- **Kernel:** Sempre usando a versão latest (pode mudar para LTS se preferir estabilidade)
-- **Nvidia:** Se tiver problemas com suspend/hibernate, ative `powerManagement.enable = true` no bloco nvidia
-- **Wayland:** Funciona perfeitamente com GNOME e NVIDIA nos drivers recentes
-
-## 🤝 Contribuindo
-
-Achou algo interessante ou tem sugestões? Sinta-se livre para abrir uma issue ou PR! Este é um projeto pessoal, mas adoro aprender com a comunidade.
-
-## 📝 Notas
-
-- Esta config é para uso pessoal, mas está pública para ajudar outros usuários de NixOS
-- Baseado em NixOS 25.11 (pode funcionar em versões anteriores com ajustes)
-- Testado apenas no meu hardware (mas deve funcionar em qualquer máquina com ajustes mínimos)
-
-## 📜 Licença
-
-MIT - Faça o que quiser com isso! 🎉
 
 ---
 
-*Feito com ❤️ e muito café ☕ em NixOS*
+### Updating the System
 
-**P.S.:** Se você está lendo isso e pensando "cara, essa GTX 1060 em 2026?", sim amigo, ela ainda aguenta. Não julga. 😅
+```bash
+# Update channels
+sudo nix-channel --update
+
+# Rebuild
+sudo nixos-rebuild switch 
+or 
+sudo nixos-rebuild switch --flake /etc/nixos # for flakes
+# Or everything at once
+sudo nix-channel --update && sudo nixos-rebuild switch
+```
+
+---
+
+### Cleaning Old Generations
+
+```bash
+# List generations
+sudo nix-env --list-generations --profile /nix/var/nix/profiles/system
+
+# Delete old generations (keeps the latest ones in the boot menu)
+sudo nix-collect-garbage -d
+
+# Or delete specific generations
+sudo nix-env --delete-generations 1 2 3 --profile /nix/var/nix/profiles/system
+```
+
+---
+
+## 🔧 Interesting Customizations
+
+### Home Manager
+Home Manager is integrated into NixOS to manage user-level configuration. All Gruvbox theming, fonts, and GNOME settings live under `home-manager.users.anorak`.
+
+### PostgreSQL in DEV Mode
+PostgreSQL is configured with **trust authentication** (no password). Perfect for local development — **never use this in production or on exposed systems**.
+
+### Flatpak Auto Setup
+A systemd service automatically adds the Flathub repository on first boot.
+
+### Boot Limit
+The bootloader keeps only the last 4 system generations (configurable via `boot.loader.systemd-boot.configurationLimit`).
+
+---
+
+## 💡 Tips
+
+- **NTFS Support:** Enabled for Windows dual-boot setups
+- **Kernel:** Always latest (switch to LTS if you prefer stability)
+- **NVIDIA:** If suspend/hibernate misbehaves, enable `powerManagement.enable = true`
+- **Wayland:** Works flawlessly with GNOME and recent NVIDIA drivers
+
+---
+
+## 🤝 Contributing
+
+Found something interesting or have suggestions? Feel free to open an issue or PR. This is a personal project, but I love learning from the community.
+
+---
+
+## 📝 Notes
+
+- This config is personal but public to help other NixOS users
+- Based on NixOS 26.05 (may require adjustments for other versions)
+- Tested only on my hardware (but should work elsewhere with minimal changes)
+
+---
+
+## 📜 License
+
+MIT — Do whatever you want with it! 🎉
+
+---
+
+*Made with ❤️ and lots of coffee ☕ on NixOS*
+
+**P.S.:** If you’re reading this thinking “a GTX 1060 in 2026?”, yes — it’s still holding up. Don’t judge. 😅
+**P.S. pt2:** I'm continuously  updating this documentation and the configuration as i learn about NixOS.
+
