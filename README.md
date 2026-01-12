@@ -64,7 +64,7 @@ Configured plugins:
 ---
 
 ## 🔐 Secure Boot with Lanzaboote (Flakes)
-**Full tutorial here = [Setup Guide](./SECURE_BOOT.md)
+**Full tutorial here** = [Setup Guide](./nixos_secureboot_tutorial.md)
 
 This configuration uses **lanzaboote** to enable **UEFI Secure Boot** while keeping the system fully declarative and compatible with **Nix flakes**.
 
