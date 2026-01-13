@@ -2,34 +2,40 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running 'nixos-help').
 
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 {
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
-    ./disks.nix # Arquivo local (ver disks.nix.example)
+    ./disks.nix # Local file (look disks.nix.example)
   ];
-  
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  
+
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
+
   # Bootloader
   boot.loader.systemd-boot.enable = lib.mkForce false;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.timeout = 120;
   boot.supportedFilesystems = [ "ntfs" ];
-  
+
   # Lanzaboote for Secure Boot
   boot.lanzaboote = {
     enable = true;
     pkiBundle = "/var/lib/sbctl";
   };
- 
-  
- 
- # Generation limit
+
+  # Generation limit
   boot.loader.systemd-boot.configurationLimit = 3;
-  
+
   # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
@@ -56,7 +62,7 @@
     LC_TIME = "pt_BR.UTF-8";
   };
 
-# Enables OpenGL/Graphics support.
+  # Enables OpenGL/Graphics support.
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
@@ -87,16 +93,15 @@
   # Enable the GNOME Desktop Environment
   services.desktopManager.gnome.enable = true;
 
-  # Printing 
+  # Printing
   services.printing.enable = true;
-  
+
   programs.fish.enable = true;
 
   programs.direnv = {
     enable = true;
     nix-direnv.enable = true;
- };
-
+  };
 
   # Enable sound with pipewire.
   services.pulseaudio.enable = false;
@@ -243,8 +248,6 @@
     '';
   };
 
-  
-
   # OBS-Studio and plugins Settings
   programs.obs-studio = {
     enable = true;
@@ -265,9 +268,7 @@
     ];
   };
 
-
-
-   # Packages
+  # Packages
   environment.systemPackages = with pkgs; [
     sbctl
     ntfs3g
@@ -289,6 +290,7 @@
     grc
     vscode
     vim
+    neovim
     nixfmt
     postgresql
     ghostty
