@@ -2,7 +2,7 @@
 
 > *"Humanity questioned. The computer calculated. Millions of years passed. The answer echoed through the cosmos: '42'. Meanwhile, in the basement, a dev discovered that `nixos-rebuild switch` solves almost everything. Almost."*
 
-Welcome to my NixOS configuration! This is my personal setup running GNOME with a Gruvbox theme.
+Welcome to my NixOS configuration! This is my personal setup running GNOME and the latest kernel version.
 
 ---
 
