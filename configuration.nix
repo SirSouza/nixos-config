@@ -289,6 +289,7 @@
     git
     grc
     vscode
+    steam
     vim
     neovim
     nixfmt
