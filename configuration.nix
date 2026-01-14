@@ -247,6 +247,7 @@
       flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
     '';
   };
+  
 
   # OBS-Studio and plugins Settings
   programs.obs-studio = {
@@ -308,7 +309,7 @@
     fishPlugins.hydro
     fishPlugins.grc
     nmap
-    gparted
+    gparted    
   ];
   environment.pathsToLink = [ "/share/applications" ];
   system.stateVersion = "25.11";
