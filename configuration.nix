@@ -309,7 +309,8 @@
     fishPlugins.hydro
     fishPlugins.grc
     nmap
-    gparted    
+    gparted
+    rustup
   ];
   environment.pathsToLink = [ "/share/applications" ];
   system.stateVersion = "25.11";
