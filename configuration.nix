@@ -271,6 +271,7 @@
 
   # Packages
   environment.systemPackages = with pkgs; [
+    (bottles.override { removeWarningPopup = true; })
     sbctl
     ntfs3g
     gnome-extension-manager
