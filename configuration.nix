@@ -179,7 +179,6 @@
           icon-theme = "Gruvbox-Plus-Dark";
           gtk-theme = "Gruvbox-Dark-macos";
         };
-
         # Automatic cleaning and Privacy
         "org/gnome/desktop/privacy" = {
           remember-recent-files = true;
@@ -187,6 +186,7 @@
           remove-old-trash-files = true;
           remove-old-temp-files = true;
           old-files-age = 30;
+          
         };
       };
 
@@ -199,7 +199,7 @@
         };
         iconTheme = {
           name = "Gruvbox-Plus-Dark";
-          package = pkgs.gruvbox-plus-icons;
+         package = gruvbox-theme-custom;
         };
       };
 
@@ -207,7 +207,7 @@
       home.file.".themes/Gruvbox-Dark-macos".source =
         "${gruvbox-theme-custom}/share/themes/Gruvbox-Dark-macos";
       home.file.".local/share/icons/Gruvbox-Plus-Dark".source =
-        "${pkgs.gruvbox-plus-icons}/share/icons/Gruvbox-Plus-Dark";
+      "${pkgs.gruvbox-plus-icons}/share/icons/Gruvbox-Plus-Dark";
 
       xdg.configFile = {
         "gtk-3.0/settings.ini".text = ''
