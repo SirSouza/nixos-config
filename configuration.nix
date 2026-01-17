@@ -271,6 +271,11 @@
 
   # Packages
   environment.systemPackages = with pkgs; [
+    (python3.withPackages (python-pkgs: with python-pkgs; [
+      pandas
+      requests
+      rpy2
+    ]))
     (bottles.override { removeWarningPopup = true; })
     sbctl
     ntfs3g
