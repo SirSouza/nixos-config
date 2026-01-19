@@ -2,15 +2,23 @@
 
 {
   # Discos específicos desta máquina
-  fileSystems."/mnt/Hard-Drive" = {
+  fileSystems."/mnt/C3PO" = {
     device = "/dev/disk/by-uuid/8ABC98D3BC98BAE1";
     fsType = "ntfs";
-    options = [ "rw" "uid=1000" "nofail" ];
+    options = [
+      "rw"
+      "uid=1000"
+      "nofail"
+    ];
   };
 
-  fileSystems."/mnt/Hard-Drive-1" = {
-    device = "/dev/disk/by-uuid/F2FEA9D5FEA99281";
-    fsType = "ntfs";
-    options = [ "rw" "uid=1000" "nofail" ];
+  fileSystems."/mnt/R2D2" = {
+    device = "/dev/disk/by-uuid/e02f155d-fb48-4b8c-af8c-38f36f026165";
+    fsType = "btrfs";
+    options = [
+      "compress=zstd"
+      "noatime"
+      "nofail"
+    ];
   };
 }
