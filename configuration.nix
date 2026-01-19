@@ -89,27 +89,27 @@
     wayland.enable = true;
     theme = "where_is_my_sddm_theme";
     settings = {
-          Wayland = {
+      Wayland = {
         CompositorCommand = "${pkgs.weston}/bin/weston --shell=kiosk -c /etc/sddm-weston.ini";
       };
     };
   };
   qt = {
-  enable = true;
-  platformTheme = "gnome";
-  style = "adwaita-dark";
+    enable = true;
+    platformTheme = "gnome";
+    style = "adwaita-dark";
   };
   environment.etc."sddm-weston.ini".text = ''
-  [output]
-  name=DP-2
-  mode=1920x1080@180.003
-  primary=true
+    [output]
+    name=DP-2
+    mode=1920x1080@180.003
+    primary=true
 
-  [output]
-  name=DP-1
-  mode=1920x1080@50.000
-  transform=90
-'';
+    [output]
+    name=DP-1
+    mode=1920x1080@50.000
+    transform=90
+  '';
   systemd.tmpfiles.rules = [
     "d /var/lib/sddm/.config 0711 sddm sddm - -"
     "f /var/lib/sddm/.config/kwinoutputconfig.json 0644 sddm sddm - -"
@@ -211,7 +211,7 @@
           remove-old-trash-files = true;
           remove-old-temp-files = true;
           old-files-age = 30;
-          
+
         };
       };
 
@@ -224,7 +224,7 @@
         };
         iconTheme = {
           name = "Gruvbox-Plus-Dark";
-         package = gruvbox-theme-custom;
+          package = gruvbox-theme-custom;
         };
       };
 
@@ -232,7 +232,7 @@
       home.file.".themes/Gruvbox-Dark-macos".source =
         "${gruvbox-theme-custom}/share/themes/Gruvbox-Dark-macos";
       home.file.".local/share/icons/Gruvbox-Plus-Dark".source =
-      "${pkgs.gruvbox-plus-icons}/share/icons/Gruvbox-Plus-Dark";
+        "${pkgs.gruvbox-plus-icons}/share/icons/Gruvbox-Plus-Dark";
 
       xdg.configFile = {
         "gtk-3.0/settings.ini".text = ''
@@ -272,7 +272,6 @@
       flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
     '';
   };
-  
 
   # OBS-Studio and plugins Settings
   programs.obs-studio = {
@@ -296,6 +295,9 @@
 
   # Packages
   environment.systemPackages = with pkgs; [
+    btop
+    cmatrix
+    fastfetch
     libsForQt5.qt5.qtgraphicaleffects
     libsForQt5.qt5.qtquickcontrols2
     libsForQt5.qt5.qtsvg
@@ -303,11 +305,13 @@
     weston
     kdePackages.plasma-desktop
     kdePackages.sddm-kcm
-    (python3.withPackages (python-pkgs: with python-pkgs; [
-      pandas
-      requests
-      rpy2
-    ]))
+    (python3.withPackages (
+      python-pkgs: with python-pkgs; [
+        pandas
+        requests
+        rpy2
+      ]
+    ))
     (bottles.override { removeWarningPopup = true; })
     sbctl
     ntfs3g
