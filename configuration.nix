@@ -87,8 +87,33 @@
   services.displayManager.sddm = {
     enable = true;
     wayland.enable = true;
-    theme = "breeze";
+    theme = "where_is_my_sddm_theme";
+    settings = {
+          Wayland = {
+        CompositorCommand = "${pkgs.weston}/bin/weston --shell=kiosk -c /etc/sddm-weston.ini";
+      };
+    };
   };
+  qt = {
+  enable = true;
+  platformTheme = "gnome";
+  style = "adwaita-dark";
+  };
+  environment.etc."sddm-weston.ini".text = ''
+  [output]
+  name=DP-2
+  mode=1920x1080@180.003
+  primary=true
+
+  [output]
+  name=DP-1
+  mode=1920x1080@50.000
+  transform=90
+'';
+  systemd.tmpfiles.rules = [
+    "d /var/lib/sddm/.config 0711 sddm sddm - -"
+    "f /var/lib/sddm/.config/kwinoutputconfig.json 0644 sddm sddm - -"
+  ];
 
   # Enable the GNOME Desktop Environment
   services.desktopManager.gnome.enable = true;
@@ -271,6 +296,13 @@
 
   # Packages
   environment.systemPackages = with pkgs; [
+    libsForQt5.qt5.qtgraphicaleffects
+    libsForQt5.qt5.qtquickcontrols2
+    libsForQt5.qt5.qtsvg
+    where-is-my-sddm-theme
+    weston
+    kdePackages.plasma-desktop
+    kdePackages.sddm-kcm
     (python3.withPackages (python-pkgs: with python-pkgs; [
       pandas
       requests
