@@ -117,7 +117,7 @@
 
   # Enable the GNOME Desktop Environment
   services.desktopManager.gnome.enable = true;
-
+  programs.dconf.enable = true;
   # Printing
   services.printing.enable = true;
 
@@ -169,6 +169,7 @@
     extraGroups = [
       "networkmanager"
       "wheel"
+      "libvirtd"
     ];
     packages = with pkgs; [ ];
   };
@@ -293,8 +294,14 @@
     ];
   };
 
+  # VM configuration
+  virtualisation.libvirtd.enable = true;
+  programs.virt-manager.enable = true;
+
   # Packages
   environment.systemPackages = with pkgs; [
+    gsettings-desktop-schemas
+    dconf
     btop
     cmatrix
     fastfetch
