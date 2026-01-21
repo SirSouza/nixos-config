@@ -374,6 +374,8 @@
     vlc
     obsidian
     nodejs
+    android-studio
+    yarn
     fish
     fishPlugins.done
     fishPlugins.fzf-fish
