@@ -321,8 +321,21 @@
       </ip>
     </network>
   '';
+  
+  
+  # Jellyfin configuration
+  services.jellyfin = {
+   enable = true;
+   openFirewall = true;
+   user = "anorak";
+  };
+  
   # Packages
   environment.systemPackages = with pkgs; [
+  jellyfin-media-player
+  jellyfin
+  jellyfin-web
+  jellyfin-ffmpeg
   wineWowPackages.waylandFull
   lutris
   pcsx2
