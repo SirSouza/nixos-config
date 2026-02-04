@@ -118,16 +118,28 @@
   # Enable the GNOME Desktop Environment
   services.desktopManager.gnome.enable = true;
   programs.dconf.enable = true;
+  services.dbus.packages = [ pkgs.dconf ];
+  environment.sessionVariables = {
+  GSETTINGS_SCHEMA_DIR = "${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}/glib-2.0/schemas";
+};
   # Printing
   services.printing.enable = true;
-
+  
+  # Fish terminal
   programs.fish.enable = true;
 
+  # env setup
   programs.direnv = {
     enable = true;
     nix-direnv.enable = true;
   };
+  
+  #nom-nix binaries
+  programs.nix-ld.enable = true;
 
+  # Index
+  programs.nix-index.enable = true;
+  
   # Enable sound with pipewire.
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
@@ -330,8 +342,42 @@
    user = "anorak";
   };
   
+  nixpkgs.config.packageOverrides = pkgs: {
+    cool-retro-term = pkgs.symlinkJoin {
+      name = "cool-retro-term";
+      paths = [ pkgs.cool-retro-term ];
+      buildInputs = [ pkgs.makeWrapper ];
+      postBuild = ''
+        wrapProgram $out/bin/cool-retro-term \
+          --set GSETTINGS_SCHEMA_DIR "${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}/glib-2.0/schemas"
+      '';
+    };
+  };
+
+  # Enable FUSE
+  programs.fuse.enable = true;
+  programs.fuse.userAllowOther = true;
+  
+  # Autorun Appimage
+  programs.appimage = {
+  enable = true;
+  binfmt = true;
+  };
+  
   # Packages
   environment.systemPackages = with pkgs; [
+  (makeDesktopItem {
+    name = "Anytype";
+    desktopName = "Anytype";
+    exec = "appimage-run /home/anorak/Appimages/Anytype-0.53.1.AppImage";
+    icon = "/home/anorak/Appimages/anytype.png";
+    comment = "Uma descrição curta";
+    categories = [ "Utility" ];
+  })
+  appimage-run
+  fuse
+  fuse2
+  cool-retro-term
   jellyfin-media-player
   jellyfin
   jellyfin-web
@@ -341,6 +387,7 @@
   pcsx2
   rpcs3
   gsettings-desktop-schemas
+  glib
   dconf
   btop
   cmatrix
@@ -401,6 +448,9 @@
   gparted
   rustup
   ];
-  environment.pathsToLink = [ "/share/applications" ];
+  environment.pathsToLink = [ 
+  "/share/applications"
+  "/share/gsettings-schemas"
+  ];
   system.stateVersion = "25.11";
 }
