@@ -366,6 +366,11 @@
   
   # Packages
   environment.systemPackages = with pkgs; [
+  ripgrep
+  nixd
+  clang-tools
+  lua-language-server
+  pyright
   (makeDesktopItem {
     name = "Anytype";
     desktopName = "Anytype";
@@ -378,7 +383,6 @@
   fuse
   fuse2
   cool-retro-term
-  jellyfin-media-player
   jellyfin
   jellyfin-web
   jellyfin-ffmpeg
