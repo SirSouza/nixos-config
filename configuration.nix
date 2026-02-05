@@ -451,6 +451,9 @@
   nmap
   gparted
   rustup
+  gcc
+  binutils
+  gnumake
   ];
   environment.pathsToLink = [ 
   "/share/applications"
