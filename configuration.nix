@@ -120,11 +120,11 @@
   programs.dconf.enable = true;
   services.dbus.packages = [ pkgs.dconf ];
   environment.sessionVariables = {
-  GSETTINGS_SCHEMA_DIR = "${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}/glib-2.0/schemas";
-};
+    GSETTINGS_SCHEMA_DIR = "${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}/glib-2.0/schemas";
+  };
   # Printing
   services.printing.enable = true;
-  
+
   # Fish terminal
   programs.fish.enable = true;
 
@@ -133,13 +133,13 @@
     enable = true;
     nix-direnv.enable = true;
   };
-  
+
   #nom-nix binaries
   programs.nix-ld.enable = true;
 
   # Index
   programs.nix-index.enable = true;
-  
+
   # Enable sound with pipewire.
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
@@ -228,40 +228,11 @@
         };
       };
 
-      #  GTK Settings
-      gtk = {
-        enable = true;
-        theme = {
-          name = "Gruvbox-Dark-macos";
-          package = gruvbox-theme-custom;
-        };
-        iconTheme = {
-          name = "Gruvbox-Plus-Dark";
-          package = gruvbox-theme-custom;
-        };
-      };
-
       # symbolyc links for GTK4
       home.file.".themes/Gruvbox-Dark-macos".source =
         "${gruvbox-theme-custom}/share/themes/Gruvbox-Dark-macos";
       home.file.".local/share/icons/Gruvbox-Plus-Dark".source =
         "${pkgs.gruvbox-plus-icons}/share/icons/Gruvbox-Plus-Dark";
-
-      xdg.configFile = {
-        "gtk-3.0/settings.ini".text = ''
-          [Settings]
-          gtk-theme-name=Gruvbox-Dark-macos
-          gtk-icon-theme-name=Gruvbox-Plus-Dark
-          gtk-font-name=JetBrainsMono Nerd Font 11
-          gtk-cursor-theme-name=Adwaita
-          gtk-application-prefer-dark-theme=1
-        '';
-        "gtk-4.0/assets".source = "${gruvbox-theme-custom}/share/themes/Gruvbox-Dark-macos/gtk-4.0/assets";
-        "gtk-4.0/gtk.css".source =
-          "${gruvbox-theme-custom}/share/themes/Gruvbox-Dark-macos/gtk-4.0/gtk.css";
-        "gtk-4.0/gtk-dark.css".source =
-          "${gruvbox-theme-custom}/share/themes/Gruvbox-Dark-macos/gtk-4.0/gtk-dark.css";
-      };
 
       # Enviroment viariables for GTK
       home.sessionVariables = {
@@ -333,15 +304,14 @@
       </ip>
     </network>
   '';
-  
-  
+
   # Jellyfin configuration
   services.jellyfin = {
-   enable = true;
-   openFirewall = true;
-   user = "anorak";
+    enable = true;
+    openFirewall = true;
+    user = "anorak";
   };
-  
+
   nixpkgs.config.packageOverrides = pkgs: {
     cool-retro-term = pkgs.symlinkJoin {
       name = "cool-retro-term";
@@ -357,107 +327,108 @@
   # Enable FUSE
   programs.fuse.enable = true;
   programs.fuse.userAllowOther = true;
-  
+
   # Autorun Appimage
   programs.appimage = {
-  enable = true;
-  binfmt = true;
+    enable = true;
+    binfmt = true;
   };
-  
+
   # Packages
   environment.systemPackages = with pkgs; [
-  ripgrep
-  nixd
-  clang-tools
-  lua-language-server
-  pyright
-  (makeDesktopItem {
-    name = "Anytype";
-    desktopName = "Anytype";
-    exec = "appimage-run /home/anorak/Appimages/Anytype-0.53.1.AppImage";
-    icon = "/home/anorak/Appimages/anytype.png";
-    comment = "Uma descrição curta";
-    categories = [ "Utility" ];
-  })
-  appimage-run
-  fuse
-  fuse2
-  cool-retro-term
-  jellyfin
-  jellyfin-web
-  jellyfin-ffmpeg
-  wineWowPackages.waylandFull
-  lutris
-  pcsx2
-  rpcs3
-  gsettings-desktop-schemas
-  glib
-  dconf
-  btop
-  cmatrix
-  fastfetch
-  libsForQt5.qt5.qtgraphicaleffects
-  libsForQt5.qt5.qtquickcontrols2
-  libsForQt5.qt5.qtsvg
-  where-is-my-sddm-theme
-  weston
-  kdePackages.plasma-desktop
-  kdePackages.sddm-kcm
-  (python3.withPackages (
-    python-pkgs: with python-pkgs; [
-      pandas
-      requests
-      rpy2
-    ]
-  ))
-  (bottles.override { removeWarningPopup = true; })
-  sbctl
-  ntfs3g
-  gnome-extension-manager
-  gnome-software
-  gnome-tweaks
-  gnomeExtensions.user-themes
-  gnomeExtensions.blur-my-shell
-  gnomeExtensions.dash-to-dock
-  gtk-engine-murrine
-  gnome-themes-extra
-  gruvbox-gtk-theme
-  gruvbox-plus-icons
-  sassc
-  inter
-  wget
-  git
-  grc
-  vscode
-  steam
-  vim
-  neovim
-  nixfmt
-  postgresql
-  ghostty
-  discord
-  element
-  spotify
-  vlc
-  obsidian
-  nodejs
-  yarn
-  fish
-  fishPlugins.done
-  fishPlugins.fzf-fish
-  fishPlugins.forgit
-  fishPlugins.hydro
-  fishPlugins.grc
-  nmap
-  gparted
-  rustup
-  gcc
-  binutils
-  gnumake
+    ripgrep
+    nixd
+    clang-tools
+    lua-language-server
+    pyright
+    (makeDesktopItem {
+      name = "Anytype";
+      desktopName = "Anytype";
+      exec = "appimage-run /home/anorak/Appimages/Anytype-0.53.1.AppImage";
+      icon = "/home/anorak/Appimages/anytype.png";
+      comment = "Uma descrição curta";
+      categories = [ "Utility" ];
+    })
+    appimage-run
+    fuse
+    fuse2
+    cool-retro-term
+    jellyfin
+    jellyfin-desktop
+    jellyfin-web
+    jellyfin-ffmpeg
+    wineWowPackages.waylandFull
+    lutris
+    pcsx2
+    rpcs3
+    gsettings-desktop-schemas
+    glib
+    dconf
+    btop
+    cmatrix
+    fastfetch
+    libsForQt5.qt5.qtgraphicaleffects
+    libsForQt5.qt5.qtquickcontrols2
+    libsForQt5.qt5.qtsvg
+    where-is-my-sddm-theme
+    weston
+    kdePackages.plasma-desktop
+    kdePackages.sddm-kcm
+    (python3.withPackages (
+      python-pkgs: with python-pkgs; [
+        pandas
+        requests
+        rpy2
+      ]
+    ))
+    (bottles.override { removeWarningPopup = true; })
+    sbctl
+    ntfs3g
+    gnome-extension-manager
+    gnome-software
+    gnome-tweaks
+    gnomeExtensions.user-themes
+    gnomeExtensions.blur-my-shell
+    gnomeExtensions.dash-to-dock
+    gtk-engine-murrine
+    gnome-themes-extra
+    gruvbox-gtk-theme
+    gruvbox-plus-icons
+    sassc
+    inter
+    wget
+    git
+    grc
+    vscode
+    steam
+    vim
+    neovim
+    nixfmt
+    postgresql
+    ghostty
+    discord
+    element
+    spotify
+    vlc
+    obsidian
+    nodejs
+    yarn
+    fish
+    fishPlugins.done
+    fishPlugins.fzf-fish
+    fishPlugins.forgit
+    fishPlugins.hydro
+    fishPlugins.grc
+    nmap
+    gparted
+    rustup
+    gcc
+    binutils
+    gnumake
   ];
-  environment.pathsToLink = [ 
-  "/share/applications"
-  "/share/gsettings-schemas"
+  environment.pathsToLink = [
+    "/share/applications"
+    "/share/gsettings-schemas"
   ];
   system.stateVersion = "25.11";
 }
