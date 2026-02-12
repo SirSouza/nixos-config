@@ -5,7 +5,7 @@
 
 > _"A humanidade questionou. O computador calculou. Milhões de anos se passaram. A resposta ecoou pelo cosmos: '42'. Enquanto isso, no porão, um dev descobriu que `nixos-rebuild switch` resolve quase tudo. Quase."_
 
-Bem-vindo à minha configuração do NixOS! Este é meu setup pessoal rodando GNOME e a versão mais recente do kernel.
+Bem-vindo à minha configuração do NixOS! Este é meu setup pessoal rodando GNOME e a versão mais recente do kernel, organizado de forma modular para fácil manutenção.
 
 ---
 
@@ -35,26 +35,40 @@ Bem-vindo à minha configuração do NixOS! Este é meu setup pessoal rodando GN
 
 - **Tema Gruvbox** em todo lugar (GTK3, GTK4, GNOME)
 - **JetBrains Mono Nerd Font** — porque desenvolvedores precisam de estilo
-- Extensões do GNOME: Dash to Dock, User Themes
-- SDDM com tema Breeze (pode ser alterado depois)
+- Extensões do GNOME: Dash to Dock, User Themes, Blur My Shell
+- SDDM com tema customizado (where_is_my_sddm_theme)
 
 ### 🛠️ Desenvolvimento
 
 - **PostgreSQL 15** configurado em modo DEV (autenticação trust, sem senha — **NÃO USE EM PRODUÇÃO**)
 - Bancos de dados pré-criados: `mydatabase` e `anorak`
 - **direnv + nix-direnv** para ambientes de desenvolvimento isolados
-- **Node.js** (gostemos ou não, JavaScript domina o mundo)
-- **VS Code** como IDE principal
+- **Node.js + Yarn** para desenvolvimento web
+- **VS Code, Zed Editor, Helix, Neovim** — escolha sua arma
+- **LSPs:** nixd, clang-tools, lua-language-server, pyright
+- **Rust, GCC, Make** prontos para usar
+
+### 🎮 Gaming & Entretenimento
+
+- **Steam** com suporte 32-bit
+- **Lutris** para jogos de várias plataformas
+- **PCSX2** (emulador PS2)
+- **RPCS3** (emulador PS3)
+- **Wine (Wayland)** para jogos Windows
+- **Bottles** para gerenciar prefixes Wine
 
 ### 🎮 Apps & Produtividade
 
 - **Ghostty** (terminal moderno e rápido)
+- **Cool Retro Term** (porque às vezes queremos hackear como nos anos 80)
 - **Firefox** (pré-instalado)
 - **Flatpak** habilitado com Flathub
 - **Discord** para comunicação
 - **Spotify** para trilhas sonoras de programação
 - **Obsidian** para organizar o caos mental
+- **Anytype** via AppImage
 - **VLC** — reproduz tudo
+- **Jellyfin** (servidor de mídia + cliente desktop)
 
 ### 🐟 Configuração do Fish Shell
 
@@ -71,6 +85,14 @@ Plugins configurados:
 - Drivers proprietários (stable)
 - Modesetting habilitado
 - Suporte 32-bit (para jogos legados)
+- CUDA habilitado (para OBS Studio)
+
+### 🖥️ Virtualização
+
+- **libvirtd + QEMU/KVM** configurado
+- **virt-manager** para interface gráfica
+- TPM virtual (swtpm) habilitado
+- Rede NAT configurada (192.168.122.0/24)
 
 ---
 
@@ -114,12 +136,33 @@ Esta configuração usa **lanzaboote** para habilitar **UEFI Secure Boot** mante
 ## 📁 Estrutura do Repositório
 
 ```
-.
-├── configuration.nix           # Configuração principal do sistema
-├── hardware-configuration.nix  # Configuração de hardware auto-gerada
-├── disks.nix                   # Layout dos discos (criar baseado no exemplo)
-└── README.md                   # Você está aqui 👋
+/etc/nixos/
+├── flake.nix                   # Flake entry point
+├── flake.lock                  # Flake lock file
+├── configuration.nix           # Main config (apenas imports!)
+├── hardware-configuration.nix  # Auto-generated hardware config
+├── disks.nix                   # Disk layout configuration
+├── home.nix                    # Home Manager user configuration
+├── modules/
+│   ├── boot.nix               # Bootloader, kernel, secure boot
+│   ├── system.nix             # Hostname, locale, timezone, nix settings
+│   ├── hardware.nix           # NVIDIA, graphics, sound
+│   ├── desktop.nix            # GNOME, SDDM, Qt configuration
+│   ├── services.nix           # PostgreSQL, Jellyfin, printing, flatpak
+│   ├── virtualization.nix     # libvirt, QEMU, virt-manager
+│   ├── programs.nix           # System programs (fish, direnv, obs, etc)
+│   ├── users.nix              # User account configuration
+│   └── packages.nix           # All system packages
+└── README.md                   # You are here 👋
 ```
+
+### 🎯 Vantagens da Estrutura Modular
+
+✅ **Organização clara** — cada arquivo tem um propósito específico  
+✅ **Fácil manutenção** — quer mudar algo do GNOME? Vai direto no `modules/desktop.nix`  
+✅ **Reutilizável** — pode copiar módulos para outras máquinas  
+✅ **Versionado** — histórico limpo no git  
+✅ **Escalável** — fácil adicionar novos módulos sem bagunçar
 
 ---
 
@@ -134,7 +177,7 @@ git clone https://github.com/SirSouza/nixos-config.git /etc/nixos
 cd /etc/nixos
 ```
 
-2. **IMPORTANTE:** Crie seu `disks.nix` de acordo com seu sistema (ou copie do exemplo)
+2. **IMPORTANTE:** Crie seu `disks.nix` de acordo com seu sistema
 
 3. Gere sua configuração de hardware:
 
@@ -142,28 +185,14 @@ cd /etc/nixos
 sudo nixos-generate-config --show-hardware-config > hardware-configuration.nix
 ```
 
-4. Edite `configuration.nix` e ajuste:
+4. Edite os módulos relevantes:
 
-- Nome de usuário (substitua `anorak` pelo seu)
-- Hostname
-- Bancos de dados PostgreSQL (se necessário)
+- `modules/users.nix` — substitua `anorak` pelo seu usuário
+- `modules/system.nix` — ajuste hostname, timezone, locale
+- `modules/services.nix` — configure bancos de dados PostgreSQL (se necessário)
+- `modules/packages.nix` — adicione/remova pacotes conforme necessário
 
-5. Recompile o sistema:
-
-```bash
-sudo nixos-rebuild switch
-```
-
-6. Com flakes:
-
-- Recomendo fortemente usar aliases para isso.
-
-```bash
-cd /etc/nixos
-sudo nixos-rebuild switch --flake .#você
-```
-
-- De qualquer lugar no seu NixOS
+5. Recompile o sistema com flakes:
 
 ```bash
 sudo nixos-rebuild switch --flake /etc/nixos
@@ -174,15 +203,15 @@ sudo nixos-rebuild switch --flake /etc/nixos
 ### Atualizando o Sistema
 
 ```bash
-# Atualizar canais
-sudo nix-channel --update
+# Atualizar flake inputs
+cd /etc/nixos
+nix flake update
 
-# Recompilar
-sudo nixos-rebuild switch
-ou
-sudo nixos-rebuild switch --flake /etc/nixos # para flakes
-# Ou tudo de uma vez
-sudo nix-channel --update && sudo nixos-rebuild switch
+# Rebuild com as atualizações
+sudo nixos-rebuild switch --flake /etc/nixos
+
+# Ou de qualquer lugar
+sudo nixos-rebuild switch --flake /etc/nixos
 ```
 
 ---
@@ -206,7 +235,7 @@ sudo nix-env --delete-generations 1 2 3 --profile /nix/var/nix/profiles/system
 
 ### Home Manager
 
-O Home Manager está integrado ao NixOS para gerenciar configurações em nível de usuário. Toda a tematização Gruvbox, fontes e configurações do GNOME ficam em `home-manager.users.anorak`.
+O Home Manager está separado em `home.nix` para gerenciar configurações em nível de usuário. Configurações do dconf/GNOME ficam lá.
 
 ### PostgreSQL em Modo DEV
 
@@ -218,16 +247,21 @@ Um serviço systemd adiciona automaticamente o repositório Flathub na primeira 
 
 ### Limite de Boot
 
-O bootloader mantém apenas as últimas 4 gerações do sistema (configurável via `boot.loader.systemd-boot.configurationLimit`).
+O bootloader mantém apenas as últimas 3 gerações do sistema (configurável via `boot.loader.systemd-boot.configurationLimit` em `modules/boot.nix`).
+
+### OBS Studio com CUDA
+
+OBS configurado com suporte NVIDIA CUDA para melhor performance de encoding.
 
 ---
 
 ## 💡 Dicas
 
 - **Suporte NTFS:** Habilitado para setups de dual-boot com Windows
-- **Kernel:** Sempre o mais recente (mude para LTS se preferir estabilidade)
-- **NVIDIA:** Se suspend/hibernate apresentarem problemas, habilite `powerManagement.enable = true`
+- **Kernel:** Sempre o mais recente (mude para LTS em `modules/boot.nix` se preferir estabilidade)
+- **NVIDIA:** Se suspend/hibernate apresentarem problemas, habilite `powerManagement.enable = true` em `modules/hardware.nix`
 - **Wayland:** Funciona perfeitamente com GNOME e drivers NVIDIA recentes
+- **Flakes:** Não esqueça de fazer `git add` em arquivos novos antes de testar!
 
 ---
 
@@ -242,6 +276,7 @@ Encontrou algo interessante ou tem sugestões? Fique à vontade para abrir uma i
 - Esta configuração é pessoal, mas pública para ajudar outros usuários do NixOS
 - Baseada no NixOS 26.05 (pode requerer ajustes para outras versões)
 - Testada apenas no meu hardware (mas deve funcionar em outros com mudanças mínimas)
+- Estrutura modular facilita customização para diferentes setups
 
 ---
 
@@ -254,20 +289,19 @@ Esta configuração é lançada sob CC0 (Domínio Público). Use-a livremente!
 
 _Feito com ❤️ e muito café ☕ no NixOS_
 
-**P.S.:** Se você está lendo isso pensando "uma GTX 1060 em 2026?", sim — ainda aguenta firme. Sem julgamentos. 😅
-**P.S. pt2:** Estou atualizando continuamente esta documentação e a configuração conforme aprendo sobre NixOS.
+**P.S.:** Se você está lendo isso pensando "uma GTX 1060 em 2026?", sim — ainda aguenta firme. Sem julgamentos. 😅  
+**P.P.S.:** Configuração refatorada para estrutura modular em 11/02/2026 — agora muito mais organizada!
 
-## </details>
+</details>
 
 <details>
-<summary>
-English Documentation
-</summary>
+<summary>English Documentation</summary>
+
 # 🚀 My NixOS Config
 
 > _"Humanity questioned. The computer calculated. Millions of years passed. The answer echoed through the cosmos: '42'. Meanwhile, in the basement, a dev discovered that `nixos-rebuild switch` solves almost everything. Almost."_
 
-Welcome to my NixOS configuration! This is my personal setup running GNOME and the latest kernel version.
+Welcome to my NixOS configuration! This is my personal setup running GNOME and the latest kernel version, organized in a modular structure for easy maintenance.
 
 ---
 
@@ -276,7 +310,7 @@ Welcome to my NixOS configuration! This is my personal setup running GNOME and t
 ### Hardware
 
 - **CPU:** AMD Ryzen 5 5600X
-- **GPU:** NVIDIA GeForce GTX 1060 3GB _(yes, it’s still alive and fighting bravely in 2026)_
+- **GPU:** NVIDIA GeForce GTX 1060 3GB _(yes, it's still alive and fighting bravely in 2026)_
 - **RAM:** 32GB (because closing Chrome tabs is not an option)
 - **Storage:** 3TB total (1TB SSD + 2× 1TB HDD)
 - **Motherboard:** ASRock B450M Steel Legend
@@ -297,26 +331,41 @@ Welcome to my NixOS configuration! This is my personal setup running GNOME and t
 
 - **Gruvbox theme** everywhere (GTK3, GTK4, GNOME)
 - **JetBrains Mono Nerd Font** — because developers need style
-- GNOME extensions: Dash to Dock, User Themes
-- SDDM with Breeze theme (can be changed later)
+- GNOME extensions: Dash to Dock, User Themes, Blur My Shell
+- SDDM with custom theme (where_is_my_sddm_theme)
 
 ### 🛠️ Development
 
 - **PostgreSQL 15** configured in DEV mode (trust auth, no password — **DO NOT USE IN PRODUCTION**)
 - Pre-created databases: `mydatabase` and `anorak`
 - **direnv + nix-direnv** for isolated development environments
-- **Node.js** (whether we like it or not, JavaScript runs the world)
-- **VS Code** as the main IDE
+- **Node.js + Yarn** for web development
+- **VS Code, Zed Editor, Helix, Neovim** — pick your weapon
+- **LSPs:** nixd, clang-tools, lua-language-server, pyright
+- **Rust, GCC, Make** ready to use
+
+### 🎮 Gaming & Entertainment
+
+- **Steam** with 32-bit support
+- **Lutris** for multi-platform gaming
+- **PCSX2** (PS2 emulator)
+- **RPCS3** (PS3 emulator)
+- **Wine (Wayland)** for Windows games
+- **Bottles** to manage Wine prefixes
 
 ### 🎮 Apps & Productivity
 
 - **Ghostty** (modern and fast terminal)
+- **Cool Retro Term** (because sometimes we want to hack like it's the 80s)
 - **Firefox** (pre-installed)
 - **Flatpak** enabled with Flathub
 - **Discord** for communication
+- **Element** for Matrix
 - **Spotify** for coding soundtracks
 - **Obsidian** to organize mental chaos
+- **Anytype** via AppImage
 - **VLC** — it plays everything
+- **Jellyfin** (media server + desktop client)
 
 ### 🐟 Fish Shell Setup
 
@@ -333,6 +382,14 @@ Configured plugins:
 - Proprietary drivers (stable)
 - Modesetting enabled
 - 32-bit support (for legacy games)
+- CUDA enabled (for OBS Studio)
+
+### 🖥️ Virtualization
+
+- **libvirtd + QEMU/KVM** configured
+- **virt-manager** for GUI management
+- Virtual TPM (swtpm) enabled
+- NAT network configured (192.168.122.0/24)
 
 ---
 
@@ -376,12 +433,33 @@ This configuration uses **lanzaboote** to enable **UEFI Secure Boot** while keep
 ## 📁 Repository Structure
 
 ```
-.
-├── configuration.nix           # Main system configuration
+/etc/nixos/
+├── flake.nix                   # Flake entry point
+├── flake.lock                  # Flake lock file
+├── configuration.nix           # Main config (imports only!)
 ├── hardware-configuration.nix  # Auto-generated hardware config
-├── disks.nix                   # Disk layout (create based on the example)
+├── disks.nix                   # Disk layout configuration
+├── home.nix                    # Home Manager user configuration
+├── modules/
+│   ├── boot.nix               # Bootloader, kernel, secure boot
+│   ├── system.nix             # Hostname, locale, timezone, nix settings
+│   ├── hardware.nix           # NVIDIA, graphics, sound
+│   ├── desktop.nix            # GNOME, SDDM, Qt configuration
+│   ├── services.nix           # PostgreSQL, Jellyfin, printing, flatpak
+│   ├── virtualization.nix     # libvirt, QEMU, virt-manager
+│   ├── programs.nix           # System programs (fish, direnv, obs, etc)
+│   ├── users.nix              # User account configuration
+│   └── packages.nix           # All system packages
 └── README.md                   # You are here 👋
 ```
+
+### 🎯 Modular Structure Advantages
+
+✅ **Clear organization** — each file has a specific purpose  
+✅ **Easy maintenance** — want to change GNOME settings? Go straight to `modules/desktop.nix`  
+✅ **Reusable** — copy modules to other machines  
+✅ **Version controlled** — clean git history  
+✅ **Scalable** — easy to add new modules without mess
 
 ---
 
@@ -404,28 +482,14 @@ cd /etc/nixos
 sudo nixos-generate-config --show-hardware-config > hardware-configuration.nix
 ```
 
-4. Edit `configuration.nix` and adjust:
+4. Edit relevant modules:
 
-- Username (replace `anorak` with yours)
-- Hostname
-- PostgreSQL databases (if needed)
+- `modules/users.nix` — replace `anorak` with your username
+- `modules/system.nix` — adjust hostname, timezone, locale
+- `modules/services.nix` — configure PostgreSQL databases (if needed)
+- `modules/packages.nix` — add/remove packages as needed
 
-5. Rebuild the system:
-
-```bash
-sudo nixos-rebuild switch
-```
-
-6. With flakes:
-
-- I strongly recommend using aliases for this.
-
-```bash
-cd /etc/nixos
-sudo nixos-rebuild switch --flake .#you
-```
-
-- From anywhere in your NixOS
+5. Rebuild the system with flakes:
 
 ```bash
 sudo nixos-rebuild switch --flake /etc/nixos
@@ -436,15 +500,15 @@ sudo nixos-rebuild switch --flake /etc/nixos
 ### Updating the System
 
 ```bash
-# Update channels
-sudo nix-channel --update
+# Update flake inputs
+cd /etc/nixos
+nix flake update
 
-# Rebuild
-sudo nixos-rebuild switch
-or
-sudo nixos-rebuild switch --flake /etc/nixos # for flakes
-# Or everything at once
-sudo nix-channel --update && sudo nixos-rebuild switch
+# Rebuild with updates
+sudo nixos-rebuild switch --flake /etc/nixos
+
+# Or from anywhere
+sudo nixos-rebuild switch --flake /etc/nixos
 ```
 
 ---
@@ -455,7 +519,7 @@ sudo nix-channel --update && sudo nixos-rebuild switch
 # List generations
 sudo nix-env --list-generations --profile /nix/var/nix/profiles/system
 
-# Delete old generations (keeps the latest ones in the boot menu)
+# Delete old generations (keeps latest ones in boot menu)
 sudo nix-collect-garbage -d
 
 # Or delete specific generations
@@ -468,7 +532,7 @@ sudo nix-env --delete-generations 1 2 3 --profile /nix/var/nix/profiles/system
 
 ### Home Manager
 
-Home Manager is integrated into NixOS to manage user-level configuration. All Gruvbox theming, fonts, and GNOME settings live under `home-manager.users.anorak`.
+Home Manager is separated into `home.nix` to manage user-level configuration. GNOME/dconf settings live there, but GTK themes are managed manually via GNOME Tweaks.
 
 ### PostgreSQL in DEV Mode
 
@@ -480,16 +544,21 @@ A systemd service automatically adds the Flathub repository on first boot.
 
 ### Boot Limit
 
-The bootloader keeps only the last 4 system generations (configurable via `boot.loader.systemd-boot.configurationLimit`).
+The bootloader keeps only the last 3 system generations (configurable via `boot.loader.systemd-boot.configurationLimit` in `modules/boot.nix`).
+
+### OBS Studio with CUDA
+
+OBS configured with NVIDIA CUDA support for better encoding performance.
 
 ---
 
 ## 💡 Tips
 
 - **NTFS Support:** Enabled for Windows dual-boot setups
-- **Kernel:** Always latest (switch to LTS if you prefer stability)
-- **NVIDIA:** If suspend/hibernate misbehaves, enable `powerManagement.enable = true`
+- **Kernel:** Always latest (switch to LTS in `modules/boot.nix` if you prefer stability)
+- **NVIDIA:** If suspend/hibernate misbehaves, enable `powerManagement.enable = true` in `modules/hardware.nix`
 - **Wayland:** Works flawlessly with GNOME and recent NVIDIA drivers
+- **Flakes:** Don't forget to `git add` new files before testing!
 
 ---
 
@@ -504,6 +573,7 @@ Found something interesting or have suggestions? Feel free to open an issue or P
 - This config is personal but public to help other NixOS users
 - Based on NixOS 26.05 (may require adjustments for other versions)
 - Tested only on my hardware (but should work elsewhere with minimal changes)
+- Modular structure makes it easy to customize for different setups
 
 ---
 
@@ -516,7 +586,7 @@ This configuration is released under CC0 (Public Domain). Use it freely!
 
 _Made with ❤️ and lots of coffee ☕ on NixOS_
 
-**P.S.:** If you’re reading this thinking “a GTX 1060 in 2026?”, yes — it’s still holding up. Don’t judge. 😅
-**P.S. pt2:** I'm continuously updating this documentation and the configuration as i learn about NixOS.
+**P.S.:** If you're reading this thinking "a GTX 1060 in 2026?", yes — it's still holding up. Don't judge. 😅  
+**P.P.S.:** Configuration refactored to modular structure on 02/11/2026 — much more organized now!
 
 </details>

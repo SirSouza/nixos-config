@@ -47,6 +47,7 @@
 
     # Terminal
     ghostty
+    quickshell
     cool-retro-term
     btop
     cmatrix
@@ -111,6 +112,13 @@
     libsForQt5.qt5.qtquickcontrols2
     libsForQt5.qt5.qtsvg
     where-is-my-sddm-theme
+    (catppuccin-sddm.override {
+    flavor = "mocha";
+    accent = "mauve";
+    font = "Noto Sans";
+    fontSize = "9";
+    loginBackground = true;
+  })
     weston
     kdePackages.plasma-desktop
     kdePackages.sddm-kcm

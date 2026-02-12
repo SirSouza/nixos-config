@@ -1,11 +1,17 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 {
   # SDDM as display manager
   services.displayManager.sddm = {
     enable = true;
     wayland.enable = true;
-    theme = "where_is_my_sddm_theme";
+    theme = "catppuccin-mocha-mauve";
+    package = pkgs.kdePackages.sddm;
     settings = {
       Wayland = {
         CompositorCommand = "${pkgs.weston}/bin/weston --shell=kiosk -c /etc/sddm-weston.ini";
