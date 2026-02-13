@@ -83,7 +83,7 @@
     obsidian
 
     # Gaming
-    wineWowPackages.waylandFull
+    wineWow64Packages.waylandFull
     lutris
     pcsx2
     rpcs3
@@ -130,6 +130,7 @@
     appimage-run
     fuse
     fuse2
+    blender
 
     # Custom desktop item for Anytype
     (makeDesktopItem {
