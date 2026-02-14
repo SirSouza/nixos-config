@@ -33,14 +33,18 @@
     clang-tools
     lua-language-server
     pyright
+    rust-analyzer
     rustup
     gcc
     binutils
     gnumake
     nodejs
+    pnpm
     yarn
     git
     vscode
+    openssl
+    pkg-config
 
     # Databases
     postgresql
