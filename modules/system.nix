@@ -30,6 +30,23 @@
     LC_TIME = "pt_BR.UTF-8";
   };
 
+  # Japonese, Chinese and Corean fonts support
+  fonts = {
+    enableDefaultPackages = true;
+    packages = with pkgs; [
+      noto-fonts
+      noto-fonts-cjk-sans
+      noto-fonts-lgc-plus
+      noto-fonts-cjk-serif
+      noto-fonts-emoji-blob-bin
+      source-han-sans
+      source-han-serif
+      nanum
+    ];
+
+    fontconfig.enable = true;
+  };
+
   # System version
   system.stateVersion = "25.11";
 }

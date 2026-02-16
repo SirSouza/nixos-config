@@ -45,6 +45,7 @@
     vscode
     openssl
     pkg-config
+    windsurf
 
     # Databases
     postgresql
@@ -135,6 +136,7 @@
     fuse
     fuse2
     blender
+    unzip
 
     # Custom desktop item for Anytype
     (makeDesktopItem {
