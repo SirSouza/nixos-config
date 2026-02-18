@@ -137,6 +137,7 @@
     fuse2
     blender
     unzip
+    nps
 
     # Custom desktop item for Anytype
     (makeDesktopItem {

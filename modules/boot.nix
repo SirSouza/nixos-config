@@ -2,9 +2,9 @@
 
 {
   # Bootloader
-  boot.loader.systemd-boot.enable = lib.mkForce false;
+  #boot.loader.systemd-boot.enable = lib.mkForce false;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.timeout = 120;
+  boot.loader.timeout = 130;
   boot.supportedFilesystems = [ "ntfs" ];
 
   # Lanzaboote for Secure Boot
