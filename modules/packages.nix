@@ -113,6 +113,7 @@
     inter
 
     # Qt/KDE (for SDDM)
+   
     libsForQt5.qt5.qtgraphicaleffects
     libsForQt5.qt5.qtquickcontrols2
     libsForQt5.qt5.qtsvg
@@ -125,8 +126,6 @@
     loginBackground = true;
   })
     weston
-    kdePackages.plasma-desktop
-    kdePackages.sddm-kcm
 
     # Utilities
     sbctl
@@ -138,6 +137,7 @@
     blender
     unzip
     nps
+    numix-cursor-theme
 
     # Custom desktop item for Anytype
     (makeDesktopItem {

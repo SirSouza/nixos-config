@@ -11,7 +11,7 @@
     enable = true;
     wayland.enable = true;
     theme = "catppuccin-mocha-mauve";
-    package = pkgs.kdePackages.sddm;
+   # package = pkgs.kdePackages.sddm;
     settings = {
       Wayland = {
         CompositorCommand = "${pkgs.weston}/bin/weston --shell=kiosk -c /etc/sddm-weston.ini";
@@ -50,12 +50,17 @@
   programs.dconf.enable = true;
   services.dbus.packages = [ pkgs.dconf ];
 
+  #Cosmic
+  services.desktopManager.cosmic.enable = true;
+  services.displayManager.cosmic-greeter.enable = true;
+
+
   # Environment variables
   environment.sessionVariables = {
     NIXOS_OZONE_WL = "1";
     WLR_NO_HARDWARE_CURSORS = "1";
   };
-
+  programs.ssh.askPassword = lib.mkOverride 49 "${pkgs.seahorse}/libexec/seahorse/ssh-askpass";
   # Path links
   environment.pathsToLink = [
     "/share/applications"
